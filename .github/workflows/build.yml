@@ -1,0 +1,28 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+
+      - name: Prepare artifacts directory
+        run: New-Item -ItemType Directory -Force artifacts | Out-Null
+
+      - name: Build
+        run: go build -buildvcs=false -o artifacts/ExHIBITKeyFind.exe .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ExHIBITKeyFind-windows
+          path: artifacts/ExHIBITKeyFind.exe
